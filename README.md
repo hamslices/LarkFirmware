@@ -49,8 +49,8 @@ The printer communicates over a USB CDC (Virtual COM Port) interface using a cus
 **Packet Structure:**
 | Field        | Size (bytes) | Description                                  |
 |--------------|--------------|----------------------------------------------|
-| SOP1         | 1            | Start of Packet 1: `0xDE`                    |
-| SOP2         | 1            | Start of Packet 2: `0xAD`                    |
+| SOP1         | 1            | Start of Packet 1: `0xAA`                    |
+| SOP2         | 1            | Start of Packet 2: `0x55`                    |
 | Command      | 1            | The command ID byte.                         |
 | Length (LSB) | 1            | The length of the payload (Little Endian).   |
 | Length (MSB) | 1            | The length of the payload (Little Endian).   |
