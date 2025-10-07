@@ -16,7 +16,6 @@ This repository contains the complete firmware for the Lark Print Engine, a soph
     *   **Fatal Error Indicator:** In the event of a hard fault or critical HAL error, the system enters a locked state and blinks "S.O.S." in Morse code on the status LED for clear visual diagnostics.
     *   **Job Fault Latching:** Operational faults like paper-out or thermal warnings are latched, ensuring they are not missed by the host application.
     *   **Fault Logging:** A ring buffer logs the last 25 fault events with timestamps and system status, which can be retrieved by the host for debugging.
-*   **Hardware Abstraction:** A clean hardware abstraction layer allows the firmware to be compiled for different hardware targets (`TARGET_DEV_BOARD` vs. `TARGET_PRODUCTION`) by changing a single preprocessor definition.
 *   **Dynamic Status Indicator:** A multi-color RGB LED provides clear, at-a-glance feedback on the printer's status, including idle, busy, printing, fault, and warning conditions.
 *   **On-the-Fly Configuration:** All major print parameters (speed, darkness, motor current, step resolution) can be configured and saved to flash via the communication protocol.
 *   **Built-in Self-Test:** A complete, high-resolution test image is embedded in the firmware and can be printed at any time via a button press or a software command.
@@ -102,7 +101,7 @@ This project is configured to be built with the STM32CubeIDE environment.
 **Build Targets:**
 *   **Debug:** Compiles with debug symbols and no optimization (`-O0`).
 *   **Release:** Compiles with full optimization (`-O3`) for production use.
-*   **Flash:** Identical to the Release build, but runs a post-build script to generate a combined binary for deployment.
+*   **Release-Slim:** Identical to the Release build, but runs a post-build script to generate a slim hex for deployment.
 
 ---
 
