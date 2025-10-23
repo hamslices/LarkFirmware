@@ -1,6 +1,6 @@
 # Lark Print Engine Firmware
 
-**Version:** 01.04  
+**Version:** 01.06  
 **Author:** HamSlices  
 **License:** GNU General Public License v3.0
 
