@@ -99,7 +99,7 @@
 
         =======================================================================
 
-        TODO: Check direction configuration value for inversion.
+        TODO: Check Motor 'direction' and 'ratio' pin values for proper polarity.
 		TODO: Build Hardware.
 
 		TODO: [!MAJOR!] Change IO definitions to reflect new board layout.
