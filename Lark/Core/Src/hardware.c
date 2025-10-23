@@ -229,18 +229,20 @@ void hardware_apply_strobe_state(IO_State state)
     const uint32_t GPIOD_STROBES = nSTB1_Pin | nSTB2_Pin | nSTB3_Pin |
     							   nSTB4_Pin | nSTB5_Pin | nSTB6_Pin;
     uint32_t gpiod_set = 0;
+
     if (state.strobe_mask & (1 << 0)) gpiod_set |= nSTB1_Pin;
     if (state.strobe_mask & (1 << 1)) gpiod_set |= nSTB2_Pin;
     if (state.strobe_mask & (1 << 2)) gpiod_set |= nSTB3_Pin;
     if (state.strobe_mask & (1 << 3)) gpiod_set |= nSTB4_Pin;
     if (state.strobe_mask & (1 << 4)) gpiod_set |= nSTB5_Pin;
     if (state.strobe_mask & (1 << 5)) gpiod_set |= nSTB6_Pin;
+
     GPIOD->BSRR = gpiod_set | ((GPIOD_STROBES & ~gpiod_set) << 16);
 }
 
 void hardware_all_strobes_off(void)
 {
-    GPIOD->BSRR = (nSTB1_Pin | nSTB2_Pin | nSTB3_Pin | nSTB4_Pin | nSTB5_Pin | nSTB6_Pin) << 16;
+    GPIOD->BSRR = (nSTB1_Pin | nSTB2_Pin | nSTB3_Pin | nSTB4_Pin | nSTB5_Pin | nSTB6_Pin);
 }
 
 void hardware_latch_pulse(void)

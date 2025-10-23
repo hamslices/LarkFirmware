@@ -95,14 +95,21 @@
 		(09/20/2025) Separated Stats from configuration, fixed flash writes and reads.
 		(10/05/2025) Fixed job start counter, increased image buffer size,
 		                fixed user configuration counter.
+		(10/23/2025) Inverted Strobe and PWM logic.
 
-		TODO: Check direction configuration value for inversion.
+        =======================================================================
+
+        TODO: Check direction configuration value for inversion.
 		TODO: Build Hardware.
 
+		TODO: [!MAJOR!] Change IO definitions to reflect new board layout.
 
-     Application Build Result (Release -O3) ....................... [10/05/2025]
+		=======================================================================
+
+
+     Application Build Result (Release -O3) ...................... [10/23/2025]
 	 --------------------------------------------------------------------------
- 	 Application ...................................... [Bank 1] Size 72.53  KB
+ 	 Application ...................................... [Bank 1] Size 72.56  KB
  	 Self Test Image .......................[Sector 4-5][Bank 2] Size 163.48 KB
  	 Statistics Counter ....................[Sector   6][Bank 2] Size 128    KB
  	 User Configuration ....................[Sector   7][Bank 2] Size 128    KB

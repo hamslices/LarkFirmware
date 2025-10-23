@@ -255,9 +255,13 @@ static void apply_led_color_from_state(led_state_t led_state)
 
 static void set_pwm_gamma_corrected(uint16_t r, uint16_t g, uint16_t b)
 {
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, gamma_lut_12bit[r]);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, gamma_lut_12bit[g]);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, gamma_lut_12bit[b]);
+  // The maximum value for a 12-bit resolution is 4095.
+  const uint16_t max_pwm_value = 4095;
+
+  // Invert the logic for active-low LEDs by subtracting from the max value.
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, max_pwm_value - gamma_lut_12bit[r]);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, max_pwm_value - gamma_lut_12bit[g]);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, max_pwm_value - gamma_lut_12bit[b]);
 }
 
 static void set_led_rgb(uint8_t r, uint8_t g, uint8_t b)
