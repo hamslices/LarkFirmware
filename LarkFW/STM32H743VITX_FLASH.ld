@@ -35,7 +35,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM_D1) + LENGTH(RAM_D1);    /* end of RAM */
+_estack = ORIGIN(RAM_D1_CACHED) + LENGTH(RAM_D1_CACHED);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -43,9 +43,29 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-  FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 2048K
+  /* This provides a clear map of the hardware without affecting program size. */
+  FLASH_BANK_1 (rx)           : ORIGIN = 0x08000000, LENGTH = 1024K /* Program code lives here */
+  
+  /* The following regions are defined in Bank 2 for our data.
+     Note the corrected ORIGIN for SELF_TEST_IMAGE_SECTOR to prevent overlap.
+     STM32H743 Bank 2 Sectors (128K each):
+     - Sector 4: 0x08180000
+     - Sector 5: 0x081A0000
+     - Sector 6: 0x081C0000
+     - Sector 7: 0x081E0000
+  */
+  SELF_TEST_IMAGE_SECTOR (rx) : ORIGIN = 0x08180000, LENGTH = 256K  /* Occupies Sectors 4 & 5 */
+  COUNTERS_SECTOR (rx)        : ORIGIN = 0x081C0000, LENGTH = 128K  /* Occupies Sector 6 */
+  CONFIG_SECTOR (rx)          : ORIGIN = 0x081E0000, LENGTH = 128K  /* Occupies Sector 7 */
+  
   DTCMRAM (xrw)  : ORIGIN = 0x20000000, LENGTH = 128K
-  RAM_D1 (xrw)   : ORIGIN = 0x24000000, LENGTH = 512K
+  
+  /* RAM definitions */
+  /* We reserve the first 1KB of RAM_D1 for DMA buffers that will be configured as non-cacheable. */
+  RAM_D1_NOCACHE (xrw) : ORIGIN = 0x24000000, LENGTH = 1K
+  /* The rest of RAM_D1 remains available for general-purpose, cacheable data. */
+  RAM_D1_CACHED (xrw)  : ORIGIN = 0x24000400, LENGTH = 511K
+  
   RAM_D2 (xrw)   : ORIGIN = 0x30000000, LENGTH = 288K
   RAM_D3 (xrw)   : ORIGIN = 0x38000000, LENGTH = 64K
   ITCMRAM (xrw)  : ORIGIN = 0x00000000, LENGTH = 64K
@@ -60,7 +80,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BANK_1
 
   /* The program code and other data goes into FLASH */
   .text :
@@ -77,7 +97,7 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >FLASH
+  } >FLASH_BANK_1
 
   /* Constant data goes into FLASH */
   .rodata :
@@ -86,25 +106,25 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_BANK_1
 
   .ARM.extab (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     *(.ARM.extab* .gnu.linkonce.armextab.*)
-  } >FLASH
+  } >FLASH_BANK_1
   .ARM (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  } >FLASH
+  } >FLASH_BANK_1
 
   .preinit_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  } >FLASH
+  } >FLASH_BANK_1
 
   .init_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -112,7 +132,7 @@ SECTIONS
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
-  } >FLASH
+  } >FLASH_BANK_1
 
   .fini_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -120,7 +140,44 @@ SECTIONS
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  } >FLASH
+  } >FLASH_BANK_1
+
+/*******************************************/
+  .self_test_image_data :
+  {
+    . = ALIGN(4);
+    KEEP(self_test_image.o(.data))
+    . = ALIGN(4);
+  } >SELF_TEST_IMAGE_SECTOR
+  
+  .counters_data (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _counters_start_address = .;
+    . = . + LENGTH(COUNTERS_SECTOR);
+    _counters_end_address = .;
+    . = ALIGN(4);
+  } >COUNTERS_SECTOR  
+
+  .config_data (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _config_start_address = .;
+    . = . + LENGTH(CONFIG_SECTOR);
+    _config_end_address = .;
+    . = ALIGN(4);
+  } >CONFIG_SECTOR
+  
+  .cacheless_buffers_section (NOLOAD) :
+  {
+    . = ALIGN(32);
+    __cacheless_buffers_start__ = .;  /* Define a symbol for the start address */
+    *(.cacheless_buffers)             /* Place all .cacheless_buffers variables here */
+    . = ALIGN(32);
+    __cacheless_buffers_end__ = .;    /* Define a symbol for the end address */
+  } >RAM_D1_NOCACHE
+  
+/*******************************************/
 
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -137,7 +194,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM_D1 AT> FLASH
+  } >RAM_D1_CACHED AT> FLASH_BANK_1
 
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -153,7 +210,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM_D1
+  } >RAM_D1_CACHED
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -164,7 +221,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM_D1
+  } >RAM_D1_CACHED
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
