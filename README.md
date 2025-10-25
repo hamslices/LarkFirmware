@@ -6,6 +6,8 @@
 
 This repository contains the complete firmware for the Lark Print Engine, a sophisticated, high-performance thermal printing system built on the STM32H7 microcontroller platform.
 
+![alt text](https://github.com/hamslices/LarkFirmware/blob/main/img/AD.png?raw=true)
+
 ## Key Features
 
 *   **High-Performance Printing:** A non-blocking, interrupt-driven architecture ensures maximum print speed and data throughput without dropping lines.
