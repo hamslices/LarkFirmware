@@ -5,6 +5,8 @@
 
 This repository contains the firmware for the Lark Power Management and Boot Controller, which runs on an ATTINY microcontroller. It serves as a simple and robust power and boot mode controller for the main Lark Print Engine (STM32).
 
+![alt text](https://github.com/hamslices/LarkFirmware/blob/main/ATTINY_BootConFW/img/AD.png?raw=true)
+
 ## Key Features
 
 *   **Dual Boot-Mode Control:** Allows the main STM32 processor to be started in either normal application mode or the DFU bootloader mode.
