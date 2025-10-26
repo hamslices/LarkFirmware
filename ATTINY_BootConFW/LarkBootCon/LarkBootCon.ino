@@ -9,7 +9,7 @@
                                                           HamSlices 2025
 **************************************************************************
 
-  Lark Power Management and Boot Controller Firmware    
+  Lark Power Management and Boot Controller Firmware (ATTINY)   
     11% of program space used, 2% of dynamic memory
     (untested 8/16/2025)
 
@@ -21,16 +21,17 @@
 
 /* Pin Definitions */
 #define PowerEnable 0
-#define nReset 1
-#define Boot0 2
-#define DebugLED 3
-#define PushBTN 4
+#define nReset      1
+#define Boot0       2
+#define DebugLED    3
+#define PushBTN     4
 
 /* Global Vars */
-int BootFlag = 0;
+int BootFlag   = 0;
 int PowerState = 0;
 
 void setup() {
+
   /* IO Setup */
   pinMode(PowerEnable, OUTPUT);  //Output
   pinMode(nReset, OUTPUT);       //Output
@@ -45,10 +46,15 @@ void setup() {
   digitalWrite(DebugLED, HIGH);    //Turn LED OFF
   delay(200);
 
+  /*
+  * If the push button is held durring power on
+  * the ATTINY will set the STM32 to bootloader mode
+  */
+
   /* Check Button Press */
   if (digitalRead(PushBTN) == 0) {
-    BootFlag = 1;                 //set bootflag to 1
-    digitalWrite(DebugLED, LOW);  //Turn LED ON
+    BootFlag = 1;                  //set bootflag to 1
+    digitalWrite(DebugLED, LOW);   //Turn LED ON
     while (digitalRead(PushBTN) == 0)
       ;                            //Hold for Release
     digitalWrite(DebugLED, HIGH);  //Turn LED OFF
@@ -56,6 +62,7 @@ void setup() {
 }
 
 void loop() {
+
   /* Check BootFlag */
   if (BootFlag) {
     digitalWrite(Boot0, HIGH);        //Boot From Bootloader
@@ -79,7 +86,7 @@ void loop() {
       digitalWrite(nReset, LOW);        //Remove from Reset
       PowerState = 1;                   //State to On
     }
-    digitalWrite(DebugLED, LOW);  //Turn LED ON
+    digitalWrite(DebugLED, LOW);   //Turn LED ON
     while (digitalRead(PushBTN) == 0)
       ;                            //Hold for Release
     digitalWrite(DebugLED, HIGH);  //Turn LED OFF
@@ -87,4 +94,4 @@ void loop() {
 }
 
 
-//Line 90
+//Line 97
