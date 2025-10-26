@@ -48,7 +48,7 @@ void hardware_init(void)
 	HAL_GPIO_WritePin(n_SLEEP_GPIO_Port, n_SLEEP_Pin, GPIO_PIN_SET);   // turn sleep off
 	HAL_GPIO_WritePin(n_RST_GPIO_Port, n_RST_Pin, GPIO_PIN_RESET);     // turn reset on
 	HAL_Delay(100);
-	HAL_GPIO_WritePin(n_RST_GPIO_Port, n_RST_Pin, GPIO_PIN_SET);   // turn reset off
+	HAL_GPIO_WritePin(n_RST_GPIO_Port, n_RST_Pin, GPIO_PIN_SET);       // turn reset off
 
     // Set initial motor state
 	hardware_motor_idle();
@@ -59,10 +59,12 @@ uint32_t hardware_poll_status_pins(void)
     uint32_t current_io_status = 0;
 
     // --- Atomic Snapshot ---
-    // Based on main.h for the production target, we know that four status
-    // pins are on GPIOE and one is on GPIOB. We read each port's Input
+    // We read each port's Input
     // Data Register only ONCE to get a consistent snapshot of the hardware state.
+
     const uint32_t gpiob_idr_snapshot = GPIOB->IDR;
+    const uint32_t gpioc_idr_snapshot = GPIOC->IDR;
+    const uint32_t gpiod_idr_snapshot = GPIOD->IDR;
     const uint32_t gpioe_idr_snapshot = GPIOE->IDR;
 
     // --- Process the Snapshot ---
@@ -70,13 +72,17 @@ uint32_t hardware_poll_status_pins(void)
     // than multiple hardware reads and prevents "input tearing," ensuring the
     // returned status represents a true state at a single moment in time.
 
-    // Check the pin on GPIOB
-    if ((gpiob_idr_snapshot & HUP_Pin))     { current_io_status |= STATUS_HEAD_UP; }
+    // check the pins on GPIOB
+    if ((gpiob_idr_snapshot & PAPER_Pin))   { current_io_status |= STATUS_NO_STOCK; }
 
-    // Check the pins on GPIOE
-    if ((gpioe_idr_snapshot & M_TMP_Pin))   { current_io_status |= STATUS_MOTOR_OVER_TEMP; }
+    // Check the pin on GPIOC
+    if ((gpioc_idr_snapshot & HUP_Pin))     { current_io_status |= STATUS_HEAD_UP; }
+
+    // Check the pins on GPIOD
+    if ((gpiod_idr_snapshot & M_TMP_Pin))   { current_io_status |= STATUS_MOTOR_OVER_TEMP; }
+
+    // check the pins on GPIOE
     if ((gpioe_idr_snapshot & H_TMP_Pin))   { current_io_status |= STATUS_HEAD_OVER_TEMP; }
-    if ((gpioe_idr_snapshot & PAPER_Pin))   { current_io_status |= STATUS_NO_STOCK; }
     if ((gpioe_idr_snapshot & MARK_Pin))    { current_io_status |= STATUS_MARK; }
 
     return current_io_status;

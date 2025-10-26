@@ -39,21 +39,13 @@
 #define ERROR_DELAY_ITERATIONS ( (MEASURED_DELAY_ITERATIONS * 1LL * DESIRED_TIME_UNIT_MS) / MEASURED_DELAY_MS )
 
 // Define the LED pin mappings based on the hardware target.
-#if HARDWARE_TARGET == TARGET_DEV_BOARD
-#define LD1_GPIO_Port GPIOE
-#define LD1_Pin       GPIO_PIN_13
-#define LD2_GPIO_Port GPIOE
-#define LD2_Pin       GPIO_PIN_11
-#define LD3_GPIO_Port GPIOE
-#define LD3_Pin       GPIO_PIN_9
-#elif HARDWARE_TARGET == TARGET_PRODUCTION
-#define LD1_GPIO_Port LED_RED_GPIO_Port
-#define LD1_Pin       LED_RED_Pin
-#define LD2_GPIO_Port LED_GREEN_GPIO_Port
-#define LD2_Pin       LED_GREEN_Pin
-#define LD3_GPIO_Port LED_BLUE_GPIO_Port
-#define LD3_Pin       LED_BLUE_Pin
-#endif
+
+#define LD1_GPIO_Port PWM3_GPIO_Port  // red
+#define LD1_Pin       PWM3_Pin
+#define LD2_GPIO_Port PWM2_GPIO_Port  // green
+#define LD2_Pin       PWM2_Pin
+#define LD3_GPIO_Port PWM1_GPIO_Port  // blue
+#define LD3_Pin       PWM1_Pin
 
 /* --- Private Function Implementations --- */
 
@@ -88,9 +80,9 @@ static void enable_gpio_clock(GPIO_TypeDef* port)
  */
 static void blink_morse_element(int duration_units)
 {
-    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);   // Red ON
+    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET); // Red ON
     for(int t = 0; t < duration_units; ++t) error_delay();
-    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET); // OFF
+    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);   // OFF
 }
 
 /**
@@ -167,9 +159,9 @@ static void error_init_led_pins(void)
     gpio_init.Pin = LD3_Pin;
     HAL_GPIO_Init(LD3_GPIO_Port, &gpio_init);
 
-    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET); //all off
+    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
 }
 
 /**
