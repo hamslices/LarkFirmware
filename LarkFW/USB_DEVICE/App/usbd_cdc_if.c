@@ -22,7 +22,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "protocol_handler.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -261,9 +261,14 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
-  USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
-  USBD_CDC_ReceivePacket(&hUsbDeviceFS);
-  return (USBD_OK);
+
+	// This callback is now only responsible for one thing: copying the data
+	// from the USB hardware buffer into our application's ring buffer.
+	// It will also notify the application layer that the hardware is now paused
+	// and waiting to be re-armed.
+	protocol_cdc_receive_callback(Buf, *Len);
+	return (USBD_OK);
+
   /* USER CODE END 6 */
 }
 

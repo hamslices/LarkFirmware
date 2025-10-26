@@ -31,7 +31,17 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ring_buffer_spsc.h"
+#include "button_handler.h"
+#include "print_engine_hw.h"
+#include "error_reporter.h"
+#include "temperature_sensor.h"
+#include "print_engine.h"
+#include "config_manager.h"
+#include "protocol_handler.h"
+#include "led_manager.h"
+#include "hardware.h"
+#include "system_utils.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -41,7 +51,10 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+#define SPI_DATA_SIZE_PER_LINE 216
 
+#define IMAGE_LINE_BUFFER_SIZE (216 * 200)
+#define RX_BUFFER_SIZE         (216 * 50)
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
