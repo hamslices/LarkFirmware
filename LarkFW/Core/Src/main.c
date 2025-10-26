@@ -27,7 +27,14 @@
   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝╚══════╝
 														  HamSlices 2025
 	Lark Print Engine Firmware
-	Revision 01.00
+	Revision 01.07
+
+	For Hardware Revision 01.00.01 & 01.00.02
+
+		A HW_bug in REV 01.00.01 prevents the raw head
+		temperature value from being read by the ADC.
+
+	---------------------------------------------------------------------------
 
 	@attention
 
@@ -96,14 +103,16 @@
 		                fixed user configuration counter.
 		(10/23/2025) Inverted Strobe and PWM logic.
 		-----------------------------------------------------------------------
+
 		(10/25/2025) Moved code from old project.
+		                Flip-ed PWM polarity in MXcube, reverted PWM inversion code.
+		                Rev-ed Firmware Version.
+		                Tested compilation.
 
         =======================================================================
 
         TODO: Check Motor 'direction' and 'ratio' pin values for proper polarity.
 		TODO: Build Hardware.
-
-		TODO: [!MAJOR!] Change IO definitions to reflect new board layout.
 
 		=======================================================================
 

@@ -29,7 +29,7 @@
  * @brief Firmware version string.
  * @note This string MUST be exactly 4 characters long to match the protocol.
  */
-#define FIRMWARE_VERSION_STRING "0106" //version 01.06
+#define FIRMWARE_VERSION_STRING "0107" //version 01.07
 
 /**
  * @brief The length of the firmware version string, in bytes.

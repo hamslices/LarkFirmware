@@ -105,7 +105,12 @@ void hardware_apply_strobe_state(IO_State state)
 
 void hardware_all_strobes_off(void)
 {
-    GPIOD->BSRR = (n_STB1_Pin | n_STB2_Pin | n_STB3_Pin | n_STB4_Pin | n_STB5_Pin | n_STB6_Pin); //set pins
+    GPIOD->BSRR = (n_STB1_Pin | //set pins
+                   n_STB2_Pin |
+                   n_STB3_Pin |
+                   n_STB4_Pin |
+                   n_STB5_Pin |
+                   n_STB6_Pin);
 }
 
 void hardware_latch_pulse(void)
