@@ -108,3 +108,5 @@ This project is configured to be built with the STM32CubeIDE environment.
 ---
 
 *Lark Print Engine © HamSlices 2025*
+
+[The Lark Project](https://github.com/hamslices/The-Lark-Project)
