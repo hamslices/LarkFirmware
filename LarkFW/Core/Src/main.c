@@ -107,6 +107,7 @@
 		                Flip-ed PWM polarity in MXcube, reverted PWM inversion code.
 		                Rev-ed Firmware Version.
 		                Tested compilation.
+		(10/28/2025) changed self test image from 'fluffy cat' to 'soaring magpie Lark'.
 
         =======================================================================
 
@@ -116,10 +117,10 @@
 		=======================================================================
 
 
-     Application Build Result (Release -O3) ...................... [10/25/2025]
+     Application Build Result (Release -O3) ...................... [10/28/2025]
 	 --------------------------------------------------------------------------
- 	 Application ...................................... [Bank 1] Size 71.19  KB
- 	 Self Test Image .......................[Sector 4-5][Bank 2] Size 163.48 KB
+ 	 Application ...................................... [Bank 1] Size 71.22  KB
+ 	 Self Test Image .......................[Sector 4-5][Bank 2] Size 178.45 KB
  	 Statistics Counter ....................[Sector   6][Bank 2] Size 128    KB
  	 User Configuration ....................[Sector   7][Bank 2] Size 128    KB
      --------------------------------------------------------------------------
