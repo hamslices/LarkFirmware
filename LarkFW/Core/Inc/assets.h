@@ -44,7 +44,7 @@ extern const uint8_t _binary_self_test_image_bin_size;
  * @brief Metadata for the self-test image.
  */
 #define SELF_TEST_IMAGE_WIDTH_PX   1728
-#define SELF_TEST_IMAGE_HEIGHT_PX  775
+#define SELF_TEST_IMAGE_HEIGHT_PX  846
 
 
 /* ========================================================================== */

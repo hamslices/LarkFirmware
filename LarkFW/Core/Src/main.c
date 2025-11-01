@@ -108,6 +108,7 @@
 		                Rev-ed Firmware Version.
 		                Tested compilation.
 		(10/28/2025) changed self test image from 'fluffy cat' to 'soaring magpie Lark'.
+		(11/01/2025) fixed self test image size in asset.h new test image size is (1728x846).
 
         =======================================================================
 
